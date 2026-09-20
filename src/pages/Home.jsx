@@ -130,8 +130,8 @@ function FullImage() {
           <Reveal delay={0.2}><p className="mt-6 max-w-md text-gray-2">Our training rooms sit a few minutes from Dhaka Medical College — but most of our cohort joins from wards, clinics and district hospitals across the country.</p></Reveal>
         </div>
         <div className="lg:col-span-4 lg:col-start-9">
-          <RevealImg src={images.pipette} alt="Fluorescence microscopy" ratio="4/5" from="left" />
-          <Meta className="mt-4 text-gray-2">Fig. — fluorescence microscopy, illustrative</Meta>
+          <RevealImg src={images.pipette} alt="Reviewing a manuscript" ratio="4/5" from="left" />
+          <Meta className="mt-4 text-gray-2">Fig. — manuscript review, illustrative</Meta>
         </div>
       </div>
     </section>
