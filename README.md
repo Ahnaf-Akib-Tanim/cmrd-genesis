@@ -4,19 +4,17 @@ Demo front end for the redesigned **Centre for Medical Research & Development** 
 Covers the publicly accessible pages only; authenticated areas (dashboard, course player, IRB submission forms) are out of scope.
 
 ## Design direction
-Visual-first, art-directed — scientific institution × editorial magazine × cinematic digital experience.
-- **Palette** — near-black, deep navy, warm white; a single signal-orange accent (`src/index.css`)
-- **Type** — Archivo variable (enormous uppercase display, width axis for condensed/wide), Inter Tight body, JetBrains Mono metadata
-- **Composition** — asymmetric 12-column editorial grid, full-bleed imagery, numbered sections, hairlines, deliberate dark/light rhythm, no card grids
-- **Motion** — Lenis smooth scroll, custom cursor, fullscreen typographic menu with image preview, canvas particle network, parallax + clip-path image reveals, pinned full-screen statements, horizontal-scroll "what we do", scroll-driven letter-spacing and word highlight, IRB step system, cursor-following course previews, curtain page transitions with page name, film grain
-- **Imagery** — authentic lab / research photography, graded consistently (contrast up, saturation down)
+Simple, organized and connected — built on the original cmrd.info content and structure.
+- **Structure** — the home page follows the live site's section order; every page uses the same header, section headings and cards
+- **Connected** — each page ends with "Where to go next" links and a helpline / WhatsApp strip, so visitors always know the next step
+- **Plain language** — original content kept, with clearer, simpler wording
+- **Look** — warm-white backgrounds, one navy section per page, a single orange accent, Archivo headings + Inter Tight body, gentle fade-in on scroll
 
 ## Stack
 - React 19 + Vite 7
 - Tailwind CSS v4
 - Framer Motion
 - React Router 7
-- Lenis (smooth scroll)
 
 ## Run
 ```bash

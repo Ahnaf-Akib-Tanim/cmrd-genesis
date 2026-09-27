@@ -2,47 +2,61 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { posts, categories, series } from '../data/posts'
 import { images } from '../data/images'
-import { Hero, Lines, Reveal, Btn, Meta, Kicker, RevealImg } from '../components/ui'
-import { PostRow, Closing } from '../components/cards'
+import { Reveal, Btn, SectionHead, Section, PageHeader } from '../components/ui'
+import { PostCard, NextSteps } from '../components/cards'
+
+const langs = [['all', 'All languages'], ['en', 'English'], ['bn', 'বাংলা']]
 
 export default function Blog() {
   const [cat, setCat] = useState('All')
-  const list = posts.filter((p) => cat === 'All' || p.category === cat)
+  const [lang, setLang] = useState('all')
+  const [q, setQ] = useState('')
+  const list = posts.filter((p) => (cat === 'All' || p.category === cat) && (lang === 'all' || p.lang === lang) && p.title.toLowerCase().includes(q.toLowerCase()))
+
   return (
     <>
-      <Hero kicker="04 — CMRD Insights" image={images.library} lines={['Research,', '*explained.*']} big desc="Short, practical articles on statistics, methodology and publication — written by our research physicians in Bangla and English." meta={[['Articles', '27'], ['Languages', 'বাংলা · English'], ['Series', '1 running']]} />
+      <PageHeader crumb="Blog" sub="Blog" title="Fresh writing from the CMRD team"
+        desc="New research notes, institutional updates, and practical insights in one place — short, free articles in Bangla and English." />
 
-      {/* series — light asymmetric */}
-      <section className="light py-24 sm:py-32">
-        <div className="wrap grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-5 lg:col-start-2"><RevealImg src={images.data} alt="" ratio="4/5" from="left" /></div>
-          <div className="flex flex-col justify-center lg:col-span-5 lg:col-start-8">
-            <Reveal><Meta accent>Featured series — {series.count} articles</Meta></Reveal>
-            <Lines as="h2" lines={['Regression', 'output', 'interpretation', 'basics']} className="display mt-6 text-[clamp(1.7rem,3.6vw,3.6rem)]" />
-            <Reveal delay={0.2}><p className="mt-6 max-w-md text-lg text-gray-2">{series.desc}</p><Btn dark href="#" className="mt-10">Start with part one</Btn></Reveal>
+      <Section tone="alt">
+        <div className="grid gap-10 border border-black/10 bg-white p-6 sm:p-8 lg:grid-cols-12 lg:items-center">
+          <div className="img grade lg:col-span-4" style={{ aspectRatio: '4/3' }}><img src={images.library} alt="" /></div>
+          <Reveal className="lg:col-span-7 lg:col-start-6">
+            <p className="meta text-accent">Featured series · {series.count} articles</p>
+            <h2 className="headline mt-3 text-2xl sm:text-3xl">{series.title}</h2>
+            <p className="mt-4 text-gray-2">{series.desc}</p>
+            <Btn href="#" className="mt-8">Start with part one</Btn>
+          </Reveal>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHead sub="All articles" title="Browse by topic" />
+        <div className="mt-10 flex flex-col gap-4 border-b border-black/10 lg:flex-row lg:items-end lg:justify-between">
+          <div className="meta flex flex-wrap gap-6">
+            {categories.map((c) => <button key={c} onClick={() => setCat(c)} className={`-mb-px border-b-2 pb-3 ${cat === c ? 'border-accent text-black' : 'border-transparent'}`}>{c}</button>)}
+          </div>
+          <div className="mb-3 flex gap-3">
+            <select value={lang} onChange={(e) => setLang(e.target.value)} aria-label="Language" className="border border-black/15 px-3 py-2.5 text-sm outline-none focus:border-black">
+              {langs.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select>
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search articles" aria-label="Search articles" className="w-full border border-black/15 px-4 py-2.5 text-sm outline-none focus:border-black sm:w-56" />
           </div>
         </div>
-      </section>
-
-      <section className="bg-white-2 py-32 text-black sm:py-44">
-        <div className="wrap">
-          <div className="flex flex-wrap items-end justify-between gap-8">
-            <Reveal><Kicker n="02">All articles</Kicker><h2 className="display mt-6 text-[clamp(2.2rem,5.76vw,6.48rem)]">Archive</h2></Reveal>
-            <Reveal className="meta flex flex-wrap gap-6">
-              {categories.map((c) => <button key={c} onClick={() => setCat(c)} className={`relative pb-1 ${cat === c ? 'text-black' : 'text-gray-2 hover:text-black'}`}>{c}{cat === c && <motion.span layoutId="btab" className="absolute inset-x-0 -bottom-px h-px bg-accent" />}</button>)}
-            </Reveal>
-          </div>
-          <AnimatePresence mode="wait">
-            <motion.div key={cat} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="mt-14">
-              {list.map((p, i) => <PostRow key={p.id} post={p} index={i} />)}
-              <div className="hairline" />
-            </motion.div>
-          </AnimatePresence>
-          <div className="meta mt-10 flex items-center gap-6"><span>Page 1</span><span className="text-gray-2">/ 3</span><a href="#" className="ul ml-auto">Next page</a></div>
+        <AnimatePresence mode="wait">
+          <motion.div key={cat + lang + q} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="mt-8">
+            {list.length ? (
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{list.map((p) => <PostCard key={p.id} p={p} />)}</div>
+            ) : <p className="border border-dashed border-black/15 p-10 text-center text-gray-2">No articles match your search.</p>}
+          </motion.div>
+        </AnimatePresence>
+        <div className="mt-10 flex items-center justify-center gap-2 text-sm">
+          {[1, 2, 3].map((n) => <button key={n} className={`h-10 w-10 border ${n === 1 ? 'border-black bg-black text-white' : 'border-black/15 hover:border-black'}`}>{n}</button>)}
+          <button className="h-10 border border-black/15 px-4 hover:border-black">Next</button>
         </div>
-      </section>
+      </Section>
 
-      <Closing lines={['New articles,', 'in your', '*inbox.*']} primary={['Create free account', '/join?mode=register']} />
+      <NextSteps title="Ready to go further?" items={['courses', 'consultancy', 'about']} />
     </>
   )
 }

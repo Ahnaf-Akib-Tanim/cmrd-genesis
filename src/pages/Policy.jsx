@@ -1,26 +1,26 @@
 import { Link } from 'react-router-dom'
-import { Lines, Reveal, Meta } from '../components/ui'
+import { Reveal, Section, PageHeader } from '../components/ui'
 import { site } from '../data/site'
 
 const content = {
-  refund: { lines: ['Refund', '*policy.*'], sections: [
-    ['Course fees', 'A full refund is available if a withdrawal request is made at least 7 days before the course start date. Withdrawals within 7 days of the start date are eligible for a 50% refund or a transfer to a future batch. No refund is issued after the second session has been delivered.'],
-    ['Consultancy services', 'Consultancy fees are quoted per scope and paid in stages. Any stage not yet started is fully refundable. Work already delivered is non-refundable; however, corrections on delivered work are always free.'],
-    ['IRB application fees', 'IRB processing fees are non-refundable once a protocol has entered review. Applications withdrawn before review begins are refunded in full.'],
-    ['How to request', `Email ${site.email} or call ${site.helpline} with your account name and payment reference. Refunds are processed within 10 working days to the original payment method.`],
+  refund: { crumb: 'Refund Policy', title: 'Refund Policy', sections: [
+    ['Course fees', 'You get a full refund if you withdraw at least 7 days before the course starts. If you withdraw within 7 days of the start date, you can get a 50% refund or move to a future batch. No refund is given after the second session.'],
+    ['Consultancy services', 'Consultancy fees are quoted for the agreed work and paid in stages. Any stage that has not started is fully refundable. Work already delivered is not refundable, but corrections on it are always free.'],
+    ['IRB application fees', 'IRB fees are not refundable once your protocol has entered review. If you withdraw before the review begins, you get a full refund.'],
+    ['How to request a refund', `Email ${site.email} or call ${site.helpline} with your name and payment reference. Refunds are processed within 10 working days to the original payment method.`],
   ] },
-  privacy: { lines: ['Privacy', '*policy.*'], sections: [
-    ['What we collect', 'Account details (name, phone, email, professional role), course enrolment history, consultancy files you share with us, and IRB submission documents.'],
-    ['How we use it', 'To deliver courses and consultancy, process IRB reviews, issue certificates and approval letters, and send service announcements. We never sell personal data.'],
-    ['Research data', 'Datasets shared for analysis are used solely for the agreed work, stored securely, and deleted on request after project completion. IRB documents are retained as required by ethical-review record-keeping standards.'],
-    ['Your rights', `You may request a copy, correction or deletion of your personal data at any time by contacting ${site.email}.`],
+  privacy: { crumb: 'Privacy Policy', title: 'Privacy Policy', sections: [
+    ['What we collect', 'Your account details (name, phone, email, profession), your course enrolments, files you share for consultancy, and documents you submit to the IRB.'],
+    ['How we use it', 'To run your courses and consultations, process IRB reviews, issue certificates and approval letters, and send you service updates. We never sell your data.'],
+    ['Your research data', 'Datasets you share are used only for the agreed work, stored securely, and deleted on request after the project ends. IRB documents are kept as ethical-review record rules require.'],
+    ['Your rights', `You can ask for a copy of your data, or ask us to correct or delete it, by emailing ${site.email}.`],
   ] },
-  terms: { lines: ['Terms &', '*conditions.*'], sections: [
-    ['Use of the platform', 'By creating an account you agree to provide accurate information and to use CMRD services for lawful, ethical research purposes only.'],
-    ['Academic integrity', 'CMRD provides training, analysis and editorial support. Intellectual ownership and authorship of research remain with the researcher, who is responsible for representing the work honestly to their institution and journals.'],
-    ['Course materials', 'Recorded videos and course materials are licensed for personal use by the enrolled participant only and may not be redistributed.'],
-    ['Certificates & approvals', 'Certificates and IRB approval letters carry unique verification codes. Any alteration invalidates the document.'],
-    ['Changes', 'CMRD may update these terms; continued use of the platform after changes constitutes acceptance.'],
+  terms: { crumb: 'Terms & Conditions', title: 'Terms & Conditions', sections: [
+    ['Using the platform', 'By creating an account you agree to give accurate information and to use CMRD services only for lawful, ethical research.'],
+    ['Academic integrity', 'CMRD provides training, analysis and editing support. The research and its authorship remain yours, and you are responsible for presenting it honestly.'],
+    ['Course materials', 'Recorded videos and course materials are for the enrolled participant only and may not be shared.'],
+    ['Certificates & approvals', 'Certificates and IRB approval letters carry a unique verification code. Any alteration makes the document invalid.'],
+    ['Changes to these terms', 'CMRD may update these terms. Continuing to use the platform means you accept the updated terms.'],
   ] },
 }
 
@@ -28,24 +28,18 @@ export default function Policy({ kind }) {
   const c = content[kind]
   return (
     <>
-      <section className="wrap pt-44 pb-20">
-        <Meta accent>Legal — updated September 2026</Meta>
-        <Lines lines={c.lines} inView={false} delay={0.2} className="display mt-6 text-[clamp(2.2rem,7.2vw,7.92rem)]" />
-      </section>
-      <section className="light py-32">
-        <div className="wrap grid gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-8 lg:col-start-3">
-            {c.sections.map(([h, p], i) => (
-              <Reveal key={h} className="grid grid-cols-[3.5rem_1fr] gap-4 hairline py-10">
-                <span className="meta pt-2 text-gray-2">{String(i + 1).padStart(2, '0')}</span>
-                <div><h2 className="display-wide text-3xl">{h}</h2><p className="mt-4 text-lg text-gray-2">{p}</p></div>
-              </Reveal>
-            ))}
-            <div className="hairline" />
-            <p className="mt-10 text-gray-2">Questions? <Link to="/contact" className="ul text-black">Contact us</Link> or email <a href={`mailto:${site.email}`} className="ul text-black">{site.email}</a>.</p>
-          </div>
+      <PageHeader crumb={c.crumb} sub="Company" title={c.title} desc="Last updated September 2026. Applies to all CMRD services." />
+      <Section tone="alt">
+        <div className="mx-auto max-w-3xl">
+          {c.sections.map(([h, p], i) => (
+            <Reveal key={h} className="border-b border-black/10 py-8 first:border-t">
+              <h2 className="text-xl font-medium">{i + 1}. {h}</h2>
+              <p className="mt-3 leading-relaxed text-gray-2">{p}</p>
+            </Reveal>
+          ))}
+          <p className="mt-10 text-gray-2">Questions? <Link to="/contact" className="ul text-black">Contact us</Link> or email <a href={`mailto:${site.email}`} className="ul text-black">{site.email}</a>.</p>
         </div>
-      </section>
+      </Section>
     </>
   )
 }

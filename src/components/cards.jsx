@@ -1,116 +1,151 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { EASE, Arrow, Meta, Btn, RevealImg, Kicker, Reveal, Lines } from './ui'
-import { site } from '../data/site'
+import { Reveal, Arrow, Solid, Btn, EASE } from './ui'
+import { site, specialties, partners } from '../data/site'
 
-const fmt = (d) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+export const fmtDate = (d) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+const wa = `https://wa.me/${site.whatsapp.replace('+', '')}`
 
-/* ---------- Course row — big typographic ---------- */
-export function CourseRow({ c, index, light = true }) {
+/* ---------- Course ---------- */
+export function CourseCard({ c, detailed = false }) {
+  const status = { upcoming: 'Upcoming', ongoing: 'Ongoing', free: 'Free' }[c.status]
   return (
-    <Link to="/join?mode=register" className="group grid items-center gap-x-8 gap-y-3 hairline py-8 lg:grid-cols-12 lg:py-10">
-      <span className={`meta lg:col-span-1 ${light ? 'text-gray-2' : 'text-gray'}`}>{String(index + 1).padStart(2, '0')}</span>
-      <div className="lg:col-span-6">
-        <div className="display-wide text-[clamp(1.2rem,2.59vw,2.59rem)] transition-transform duration-700 group-hover:translate-x-3">{c.title}</div>
-        <div className={`mt-2 text-sm ${light ? 'text-gray-2' : 'text-gray'}`}>{c.subtitle}</div>
+    <Link to="/join?mode=register" className="group flex h-full flex-col border border-black/10 bg-white p-6 transition-colors hover:border-black/30">
+      <div className="flex items-center justify-between">
+        <span className={`meta ${c.status === 'free' ? 'text-accent' : ''}`}>{status} · {c.level}</span>
+        <span className="font-medium">{c.fee === 0 ? 'Free' : `৳${c.fee.toLocaleString()}`}</span>
       </div>
-      <div className={`meta lg:col-span-2 ${light ? 'text-gray-2' : 'text-gray'}`}>{fmt(c.start)}<br />{c.duration} · {c.sessions} sessions</div>
-      <div className="meta lg:col-span-2"><span className={c.status === 'free' ? 'text-accent' : ''}>{c.status}</span><br /><span className={light ? 'text-gray-2' : 'text-gray'}>{c.mode} · {c.level}</span></div>
-      <div className="flex items-center justify-between lg:col-span-1 lg:justify-end lg:gap-4">
-        <span className="headline text-xl">{c.fee === 0 ? 'Free' : `৳${c.fee.toLocaleString()}`}</span>
-        <Arrow className="text-xl transition-transform duration-500 group-hover:translate-x-2" />
-      </div>
+      <h3 className="mt-4 text-lg font-medium leading-snug">{c.title}</h3>
+      <p className="mt-1 text-sm text-gray-2">{c.subtitle}</p>
+      <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-black/10 pt-4 text-sm">
+        <div><dt className="text-gray-2">Starts</dt><dd className="mt-0.5">{fmtDate(c.start)}</dd></div>
+        <div><dt className="text-gray-2">Duration</dt><dd className="mt-0.5">{c.duration}</dd></div>
+        <div><dt className="text-gray-2">Mode</dt><dd className="mt-0.5">{c.mode}</dd></div>
+      </dl>
+      {detailed && <p className="mt-4 flex-1 text-sm text-gray-2">Covers: {c.tags.join(', ')}.</p>}
+      <span className="meta mt-6 flex items-center gap-2 text-black">Enrol <Arrow className="transition-transform group-hover:translate-x-1" /></span>
     </Link>
   )
 }
 
-/* ---------- Project — expandable editorial entry ---------- */
-export function ProjectEntry({ p, index, image }) {
-  const [open, setOpen] = useState(index === 0)
+/* ---------- Blog post ---------- */
+export function PostCard({ p }) {
   return (
-    <article className="hairline">
-      <button onClick={() => setOpen((o) => !o)} className="group grid w-full gap-x-8 gap-y-4 py-10 text-left lg:grid-cols-12">
-        <span className="meta text-gray lg:col-span-1">{String(index + 1).padStart(2, '0')}</span>
-        <h3 className="headline text-2xl transition-transform duration-700 group-hover:translate-x-2 sm:text-3xl lg:col-span-7 lg:text-4xl">{p.title}</h3>
-        <div className="meta text-gray lg:col-span-3">{p.type}<br />{p.partner}<br />{p.date}</div>
-        <div className="flex items-start justify-between lg:col-span-1 lg:justify-end">
-          <span className={`meta ${p.status === 'Published' ? 'text-accent' : 'text-gray'}`}>{p.status}</span>
-          <span className="display ml-6 text-2xl leading-none">{open ? '−' : '+'}</span>
-        </div>
-      </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.7, ease: EASE }} className="overflow-hidden">
-            <div className="grid gap-10 pb-14 lg:grid-cols-12">
-              {image && <div className="lg:col-span-5 lg:col-start-2"><RevealImg src={image} alt="" ratio="16/10" /></div>}
-              <div className="lg:col-span-4 lg:col-start-8">
-                <Meta className="text-gray">Key finding</Meta>
-                <div className="display mt-3 text-3xl text-accent sm:text-4xl">{p.highlight}</div>
-                <p className="mt-6 text-lg leading-relaxed text-gray">{p.summary}</p>
-                <div className="meta mt-6 flex flex-wrap gap-x-4 gap-y-1 text-gray">{p.tags.map((t) => <span key={t}>#{t.replace(/\s+/g, '')}</span>)}</div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </article>
-  )
-}
-
-/* ---------- Blog row ---------- */
-export function PostRow({ post, index }) {
-  return (
-    <a href="#" className="group grid gap-x-8 gap-y-2 hairline py-8 lg:grid-cols-12">
-      <div className="meta text-gray-2 lg:col-span-2">{fmt(post.date)}<br />{post.read} min · {post.lang === 'bn' ? 'বাংলা' : 'English'}</div>
-      <div className="lg:col-span-7">
-        <h3 className="bengali headline text-2xl transition-transform duration-700 group-hover:translate-x-2 sm:text-3xl">{post.title}</h3>
-        <p className="bengali mt-3 max-w-xl text-gray-2">{post.excerpt}</p>
-      </div>
-      <div className="flex items-start justify-between lg:col-span-3 lg:justify-end lg:gap-8">
-        <span className="meta text-gray-2">{post.category}</span>
-        <Arrow dir="upright" className="text-xl transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
+    <a href="#" className="group flex h-full flex-col border border-black/10 bg-white p-6 transition-colors hover:border-black/30">
+      <p className="meta">{p.category} · {p.lang === 'bn' ? 'বাংলা' : 'English'}</p>
+      <h3 className="bengali mt-4 text-lg font-medium leading-snug">{p.title}</h3>
+      <p className="bengali mt-2 flex-1 text-sm text-gray-2">{p.excerpt}</p>
+      <div className="mt-6 flex items-center justify-between text-sm text-gray-2">
+        <span>{fmtDate(p.date)} · {p.read} min</span>
+        <span className="meta flex items-center gap-2 text-black">Read <Arrow className="transition-transform group-hover:translate-x-1" /></span>
       </div>
     </a>
   )
 }
 
-/* ---------- Testimonials ---------- */
-export function Testimonials({ items }) {
-  const [i, setI] = useState(0)
-  const t = items[i]
+/* ---------- Project (expandable) ---------- */
+export function ProjectCard({ p, image }) {
+  const [open, setOpen] = useState(false)
   return (
-    <section className="relative bg-black py-24 text-white sm:py-32">
-      <div className="wrap grid gap-10 lg:grid-cols-12">
-        <div className="lg:col-span-2"><Kicker>Voices</Kicker></div>
-        <div className="lg:col-span-9">
-          <AnimatePresence mode="wait">
-            <motion.blockquote key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.6, ease: EASE }} className="headline text-2xl sm:text-3xl lg:text-[2.6rem]">“{t.text}”</motion.blockquote>
-          </AnimatePresence>
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-6">
-            <div><div className="text-base">{t.name}</div><div className="text-sm text-gray">{t.role}</div></div>
-            <div className="meta flex items-center gap-6">
-              <button onClick={() => setI((i - 1 + items.length) % items.length)} className="ul">Prev</button>
-              <span className="text-gray">{i + 1} / {items.length}</span>
-              <button onClick={() => setI((i + 1) % items.length)} className="ul">Next</button>
-            </div>
+    <article className="border border-black/10 bg-white">
+      <div className="grid gap-6 p-6 md:grid-cols-12">
+        {image && <div className="img grade md:col-span-4" style={{ aspectRatio: '4/3' }}><img src={image} alt="" /></div>}
+        <div className={image ? 'md:col-span-8' : 'md:col-span-12'}>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-2">
+            <span className="meta text-accent">{p.status}</span><span>{p.type}</span><span>{p.date}</span>
           </div>
+          <h3 className="mt-3 text-xl font-medium leading-snug">{p.title}</h3>
+          <p className="mt-2 text-sm text-gray-2">{p.partner}</p>
+          <button onClick={() => setOpen((o) => !o)} className="meta mt-5 flex items-center gap-2" aria-expanded={open}>
+            {open ? 'Hide summary' : 'Read summary'} <span className="text-base leading-none">{open ? '−' : '+'}</span>
+          </button>
+          <AnimatePresence initial={false}>
+            {open && (
+              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.4, ease: EASE }} className="overflow-hidden">
+                <p className="pt-4 text-[15px] leading-relaxed">{p.summary}</p>
+                <p className="mt-3 text-sm"><span className="font-medium">Key finding:</span> {p.highlight}</p>
+                <p className="mt-2 text-sm text-gray-2">Keywords: {p.tags.join(', ')}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </article>
+  )
+}
+
+/* ---------- Specialties grid ---------- */
+export function SpecialtiesGrid({ cols = 5 }) {
+  return (
+    <div className={`grid gap-px bg-black/10 sm:grid-cols-2 ${cols === 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-4'}`}>
+      {specialties.map((s, i) => (
+        <Reveal key={s.title} delay={(i % cols) * 0.04} className="h-full bg-white p-6">
+          <span className="meta text-gray-2">{String(i + 1).padStart(2, '0')}</span>
+          <h3 className="mt-4 text-[17px] font-medium leading-snug">{s.title}</h3>
+          <p className="mt-2 text-sm text-gray-2">{s.desc}</p>
+        </Reveal>
+      ))}
+    </div>
+  )
+}
+
+/* ---------- Partners grid ---------- */
+export function PartnersGrid() {
+  return (
+    <div className="grid gap-px bg-black/10 sm:grid-cols-2 lg:grid-cols-4">
+      {partners.map((p, i) => (
+        <Reveal key={p} delay={(i % 4) * 0.04} className="flex min-h-24 items-center bg-white p-6 text-[15px] leading-snug">{p}</Reveal>
+      ))}
+    </div>
+  )
+}
+
+/* ---------- "Where to go next" — connects every page to the rest of the site ---------- */
+const destinations = {
+  courses: { k: 'Skill Development', t: 'Learn research step by step', to: '/courses' },
+  consultancy: { k: 'Research Consultancy', t: 'Get one-to-one expert help', to: '/consultancy' },
+  irb: { k: 'IRB Portal', t: 'Get ethical approval for your study', to: '/irb' },
+  projects: { k: 'Collaborative Works', t: 'See research we have published', to: '/projects' },
+  blog: { k: 'Blog', t: 'Read free articles on research', to: '/blog' },
+  about: { k: 'About Us', t: 'Who we are and how we work', to: '/about' },
+  contact: { k: 'Contact', t: 'Talk to our team', to: '/contact' },
+}
+export function NextSteps({ items, title = 'Where to go next' }) {
+  return (
+    <section className="bg-white-2 py-16 text-black sm:py-20">
+      <div className="wrap">
+        <Reveal><h2 className="headline text-2xl sm:text-3xl">{title}</h2></Reveal>
+        <div className={`mt-8 grid gap-4 sm:grid-cols-2 ${items.length > 2 ? 'lg:grid-cols-3' : ''}`}>
+          {items.map((key, i) => {
+            const d = destinations[key]
+            return (
+              <Reveal key={key} delay={i * 0.06}>
+                <Link to={d.to} className="group flex items-center justify-between gap-6 border border-black/10 bg-white p-6 transition-colors hover:border-black/30">
+                  <div><p className="meta">{d.k}</p><p className="mt-2 text-lg font-medium">{d.t}</p></div>
+                  <Arrow className="shrink-0 text-xl transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Reveal>
+            )
+          })}
         </div>
       </div>
     </section>
   )
 }
 
-/* ---------- Closing statement ---------- */
-export function Closing({ lines = ['Start your', 'research', '*here.*'], primary = ['Join us — it’s free', '/join?mode=register'], secondary = ['Talk on WhatsApp', `https://wa.me/${site.whatsapp.replace('+', '')}`], light = false }) {
+/* ---------- Help strip — same call to action at the end of every page ---------- */
+export function HelpStrip({ title = 'Not sure where to start?', desc = 'Tell us about your research and we will point you to the right course or consultant.' }) {
   return (
-    <section className={`${light ? 'light' : 'bg-black text-white'} py-24 sm:py-32`}>
-      <div className="wrap grid gap-12 lg:grid-cols-12">
-        <div className="lg:col-span-8"><Lines as="h2" lines={lines} className="display text-[clamp(2.4rem,7.2vw,7.92rem)]" /></div>
-        <Reveal delay={0.2} className="flex flex-col justify-end gap-6 lg:col-span-4">
-          <Btn dark={light} to={primary[1]}>{primary[0]}</Btn>
-          <a href={secondary[1]} target="_blank" rel="noreferrer" className="ul meta w-fit">{secondary[0]}</a>
-          <p className={`text-sm ${light ? 'text-gray-2' : 'text-gray'}`}>{site.helpline} · {site.email}</p>
+    <section className="bg-navy py-16 text-white sm:py-20">
+      <div className="wrap grid gap-8 lg:grid-cols-12 lg:items-center">
+        <Reveal className="lg:col-span-6">
+          <h2 className="headline text-2xl sm:text-3xl">{title}</h2>
+          <p className="mt-3 text-gray">{desc}</p>
+        </Reveal>
+        <Reveal delay={0.1} className="flex flex-wrap items-center gap-6 lg:col-span-6 lg:justify-end">
+          <Solid href={wa} target="_blank" rel="noreferrer">WhatsApp us</Solid>
+          <Btn onDark href={`tel:${site.helpline}`}>Helpline {site.helpline}</Btn>
         </Reveal>
       </div>
     </section>

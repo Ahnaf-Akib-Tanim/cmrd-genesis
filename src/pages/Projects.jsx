@@ -3,48 +3,60 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { projects } from '../data/projects'
 import { partners } from '../data/site'
 import { images } from '../data/images'
-import { Hero, Reveal, Btn, Kicker, ParallaxImg, Marquee, ScrollWords, Statement } from '../components/ui'
-import { ProjectEntry, Closing } from '../components/cards'
+import { Reveal, Solid, SectionHead, Section, PageHeader, Steps } from '../components/ui'
+import { ProjectCard, PartnersGrid, NextSteps } from '../components/cards'
 
 const filters = ['All', 'Collaborative Research', 'CMRD-Led Research']
-const imgs = [images.field, images.hospital, images.doctorTablet, images.stethoscope]
+const imgs = { 'anc-2023': images.field, 'covishield-2022': images.lab, 'ncd-2025': images.hospital, 'diabetes-2025': images.desk }
+const how = [
+  ['Share your question', 'Your department or hospital brings a clinical question worth answering.'],
+  ['Design together', 'We plan the study design, sample and tools with your team.'],
+  ['Ethics & data', 'Ethical approval through the CMRD IRB, then data collection and analysis.'],
+  ['Publish', 'We write the paper together and support journal submission.'],
+]
 
 export default function Projects() {
   const [f, setF] = useState('All')
   const list = f === 'All' ? projects : projects.filter((p) => p.type === f)
+  const published = projects.filter((p) => p.status === 'Published').length
   return (
     <>
-      <Hero kicker="03 — Collaborative works" image={images.field} lines={['Research', 'built', '*together.*']} desc="Studies designed, conducted and published with partner medical colleges and hospitals — and CMRD-led research on questions that matter to Bangladesh." meta={[['Published', projects.filter((p) => p.status === 'Published').length], ['In progress', projects.filter((p) => p.status !== 'Published').length], ['Partners', partners.length]]}>
-        <Btn to="/contact">Propose a collaboration</Btn>
-      </Hero>
+      <PageHeader crumb="Collaborative Works" sub="Research & Publications" title="Research we have done — and published" image={images.field}
+        desc="Studies CMRD has led, and studies we have carried out with partner medical colleges and hospitals.">
+        <Solid to="/contact">Propose a collaboration</Solid>
+      </PageHeader>
 
-      <section className="light py-24 sm:py-32">
-        <div className="wrap grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-3"><Reveal><Kicker n="02">Approach</Kicker></Reveal></div>
-          <ScrollWords className="headline text-[clamp(1.4rem,3.6vw,3.6rem)] lg:col-span-9" text="Every collaborative study begins with a department’s clinical question and ends with a paper the department can *stand* behind." />
+      <Section tone="alt">
+        <div className="grid grid-cols-3 gap-px bg-black/10">
+          {[[published, 'Published studies'], [projects.length - published, 'In progress'], [partners.length, 'Partner institutions']].map(([v, l]) => (
+            <Reveal key={l} className="bg-white p-6 text-center"><div className="headline text-4xl">{v}</div><div className="mt-2 text-sm text-gray-2">{l}</div></Reveal>
+          ))}
         </div>
-      </section>
+      </Section>
 
-      <section className="bg-black py-24 text-white sm:py-32">
-        <div className="wrap">
-          <div className="flex flex-wrap items-end justify-between gap-8">
-            <Reveal><Kicker n="03">Portfolio</Kicker><h2 className="display mt-6 text-[clamp(2.2rem,5.76vw,6.48rem)]">Studies</h2></Reveal>
-            <Reveal className="meta flex gap-6">
-              {filters.map((x) => <button key={x} onClick={() => setF(x)} className={`relative pb-1 ${f === x ? 'text-white' : 'text-gray hover:text-white'}`}>{x}{f === x && <motion.span layoutId="ptab" className="absolute inset-x-0 -bottom-px h-px bg-accent" />}</button>)}
-            </Reveal>
-          </div>
-          <AnimatePresence mode="wait">
-            <motion.div key={f} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="mt-14">
-              {list.map((p, i) => <ProjectEntry key={p.id} p={p} index={i} image={imgs[projects.indexOf(p) % imgs.length]} />)}
-              <div className="hairline" />
-            </motion.div>
-          </AnimatePresence>
+      <Section>
+        <SectionHead sub="Research & Publications" title="All studies" desc="Open any study to read its summary." />
+        <div className="meta mt-10 flex flex-wrap gap-6 border-b border-black/10">
+          {filters.map((x) => <button key={x} onClick={() => setF(x)} className={`-mb-px border-b-2 pb-3 ${f === x ? 'border-accent text-black' : 'border-transparent'}`}>{x}</button>)}
         </div>
-        <div className="mt-24 hairline hairline-b py-8"><Marquee items={partners} /></div>
-      </section>
+        <AnimatePresence mode="wait">
+          <motion.div key={f} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="mt-8 space-y-5">
+            {list.map((p) => <ProjectCard key={p.id} p={p} image={imgs[p.id]} />)}
+          </motion.div>
+        </AnimatePresence>
+      </Section>
 
-      <Statement lines={['Questions', 'worth', '*answering.*']} image={images.hospital} />
-      <Closing light lines={['Have a', 'clinical', '*question?*']} primary={['Start a conversation', '/contact']} />
+      <Section tone="alt">
+        <SectionHead sub="Work with us" title="How a collaboration works" />
+        <div className="mt-12"><Steps items={how} /></div>
+      </Section>
+
+      <Section>
+        <SectionHead sub="Partners" title="We Collaborated With" desc="Supporting research, strengthening impact." />
+        <div className="mt-12"><PartnersGrid /></div>
+      </Section>
+
+      <NextSteps items={['irb', 'consultancy', 'contact']} />
     </>
   )
 }

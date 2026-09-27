@@ -29,14 +29,16 @@ export const stats = [
 ]
 
 export const specialties = [
-  { title: 'MPH Research Physician Team', desc: 'Every consultation is led by physicians with formal public-health research training.', icon: 'Stethoscope' },
-  { title: 'One-to-one Demonstration', desc: 'Hands-on explanation of every analysis step so you understand your own results.', icon: 'Users' },
-  { title: 'Lowest Service Fees', desc: 'Transparent, affordable pricing designed for students, residents and early-career researchers.', icon: 'BadgeDollarSign' },
-  { title: 'Free Corrections', desc: 'Reviewer or supervisor asked for changes? Revisions on our work are always free.', icon: 'RefreshCcw' },
-  { title: 'Online & Offline', desc: 'Attend at our Hatirpool centre or join remotely from anywhere in Bangladesh.', icon: 'Globe' },
-  { title: 'Eminent Mentor Panel', desc: 'Guidance from senior academics and clinicians across leading medical colleges.', icon: 'GraduationCap' },
-  { title: 'Recorded Course Videos', desc: 'Lifetime access to session recordings for revision whenever you need.', icon: 'PlayCircle' },
-  { title: 'Certificate on Completion', desc: 'Verified certificates recognised by our partner institutions.', icon: 'Award' },
+  { title: 'MPH Research Physician Team', desc: 'Every consultation is led by physicians with formal public-health research training.' },
+  { title: 'One to One Demonstration & Explanation', desc: 'Each analysis step is shown and explained so you understand your own results.' },
+  { title: 'Lowest Service Fee', desc: 'Affordable pricing for students, residents and early-career researchers.' },
+  { title: 'Free Correction', desc: 'Supervisor or reviewer asked for changes? Corrections on our work are free.' },
+  { title: 'Easily Reachable Location', desc: 'Our centre is in Hatirpool, central Dhaka — close to major medical colleges.' },
+  { title: 'On-demand Consultation', desc: 'Book a session when you need it, at the stage you are stuck.' },
+  { title: 'Online & Offline Courses & Consultancy', desc: 'Join from anywhere in Bangladesh or attend in person.' },
+  { title: 'Eminent Mentor Panel', desc: 'Guidance from senior academics and clinicians of leading institutions.' },
+  { title: 'Opportunity to Watch Recorded Videos of The Courses', desc: 'Revise any session later from the course recordings.' },
+  { title: 'Certificate on Completion', desc: 'A certificate is awarded when you complete a course.' },
 ]
 
 export const partners = [

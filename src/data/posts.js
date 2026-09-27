@@ -7,6 +7,14 @@ export const series = {
 }
 
 export const posts = [
+  { id: 101, title: 'Do you want to present your result as an Odds ratio?', date: '2026-09-27', category: 'Statistics', lang: 'en', read: 5,
+    excerpt: 'When an odds ratio is the right way to report an association — and how to read it correctly.' },
+  { id: 102, title: 'Convenience Sampling vs Purposive Sampling: সহজভাবে পার্থক্য ও ব্যবহার', date: '2026-09-27', category: 'Research Methodology', lang: 'bn', read: 4,
+    excerpt: 'দুটি non-probability sampling পদ্ধতির পার্থক্য এবং কোনটি কখন ব্যবহার করবেন।' },
+  { id: 103, title: 'General Objective vs Specific Objective: A Simple Guide', date: '2026-09-27', category: 'Research Methodology', lang: 'en', read: 4,
+    excerpt: 'How to write a clear general objective and break it into measurable specific objectives.' },
+  { id: 104, title: 'Categorical vs Continuous Variables: A Simple Guide', date: '2026-09-27', category: 'Research Methodology', lang: 'en', read: 4,
+    excerpt: 'The variable type decides the summary statistic and the test — here is how to tell them apart.' },
   { id: 1, title: 'Research solution : AI???!!!', date: '2026-09-17', category: 'Publication', lang: 'en', read: 6,
     excerpt: 'Large language models can accelerate literature review and drafting — but where is the line between assistance and misconduct?' },
   { id: 2, title: 'Effect size', date: '2026-09-12', category: 'Statistics', lang: 'en', read: 5,

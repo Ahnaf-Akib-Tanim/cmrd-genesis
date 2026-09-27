@@ -1,44 +1,43 @@
 import { Link } from 'react-router-dom'
 import { site } from '../data/site'
-import { Lines, Btn } from './ui'
-import Particles from './Particles'
 
-const cols = [
-  ['Explore', [['Research', '/projects'], ['Training', '/courses'], ['Consultancy', '/consultancy'], ['IRB Portal', '/irb'], ['Insights', '/blog'], ['About', '/about']]],
-  ['Company', [['Contact', '/contact'], ['Join us', '/join?mode=register'], ['Sign in', '/join'], ['Refund policy', '/refund-policy'], ['Privacy', '/privacy-policy'], ['Terms', '/terms']]],
-]
+const quick = [['Home', '/'], ['Consultancy', '/consultancy'], ['Skill Development', '/courses'], ['Collaborative Works', '/projects'], ['Blog', '/blog'], ['IRB Portal', '/irb']]
+const company = [['About us', '/about'], ['Contact', '/contact'], ['Refund Policy', '/refund-policy'], ['Privacy Policy', '/privacy-policy'], ['Terms & Conditions', '/terms']]
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-black text-white">
-      <Particles className="opacity-40" density={0.6} link={110} />
-      <div className="wrap relative pt-20 pb-8">
-        <div className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-8">
-            <Lines as="h2" lines={["Let's build", 'better', '*research.*']} className="display text-[clamp(2.2rem,5vw,4.6rem)]" />
-            <div className="mt-8 flex flex-wrap gap-8">
-              <Btn to="/join?mode=register">Join CMRD</Btn>
-              <Btn href={`mailto:${site.email}`}>{site.email}</Btn>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-8 lg:col-span-4 lg:pt-2">
-            {cols.map(([h, links]) => (
-              <div key={h}>
-                <div className="meta text-gray">{h}</div>
-                <ul className="mt-4 space-y-1.5 text-sm">{links.map(([l, to]) => <li key={to}><Link to={to} className="ul">{l}</Link></li>)}</ul>
-              </div>
-            ))}
-          </div>
+    <footer className="bg-black text-white">
+      <div className="wrap grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-12">
+        <div className="lg:col-span-4">
+          <Link to="/" className="display text-2xl">CMRD</Link>
+          <p className="mt-2 text-sm text-gray">{site.fullName}</p>
+          <p className="mt-6 max-w-xs text-sm leading-relaxed text-gray">{site.tagline} Helping healthcare professionals in Bangladesh do constructive, ethical research since {site.established}.</p>
+          <p className="mt-6 text-sm text-gray">{site.address}</p>
         </div>
-
-        <div className="mt-14 grid gap-6 hairline pt-6 text-[13px] text-gray sm:grid-cols-3">
-          <div>{site.fullName}<br />{site.address}</div>
-          <div>{site.phones.join(' · ')}<br />Helpline {site.helpline} · WhatsApp {site.whatsapp}</div>
-          <div className="sm:text-right">© {new Date().getFullYear()} CMRD<br /><span className="meta">Redesign concept · demo</span></div>
+        <div className="lg:col-span-2 lg:col-start-6">
+          <h3 className="meta text-gray">Quick Links</h3>
+          <ul className="mt-4 space-y-2 text-sm">{quick.map(([l, to]) => <li key={to}><Link to={to} className="ul">{l}</Link></li>)}</ul>
+        </div>
+        <div className="lg:col-span-2">
+          <h3 className="meta text-gray">Company</h3>
+          <ul className="mt-4 space-y-2 text-sm">{company.map(([l, to]) => <li key={to}><Link to={to} className="ul">{l}</Link></li>)}</ul>
+        </div>
+        <div className="lg:col-span-3">
+          <h3 className="meta text-gray">Contact</h3>
+          <ul className="mt-4 space-y-2 text-sm">
+            <li>Phone: <a className="ul" href={`tel:${site.phones[0]}`}>{site.phones[0]}</a></li>
+            <li>WhatsApp: <a className="ul" href={`https://wa.me/${site.whatsapp.replace('+', '')}`} target="_blank" rel="noreferrer">{site.phones[1]}</a></li>
+            <li>Helpline: <a className="ul" href={`tel:${site.helpline}`}>{site.helpline}</a></li>
+            <li>Email: <a className="ul" href={`mailto:${site.email}`}>{site.email}</a></li>
+            <li><a className="ul" href={site.facebook} target="_blank" rel="noreferrer">Facebook Page</a></li>
+          </ul>
         </div>
       </div>
-      <div className="wrap relative -mb-[1.5vw] overflow-hidden">
-        <div className="display-narrow select-none text-[22vw] leading-[0.75] text-white/[0.04] lg:text-[13vw]">CMRD</div>
+      <div className="border-t border-white/10">
+        <div className="wrap flex flex-col justify-between gap-2 py-5 text-xs text-gray sm:flex-row">
+          <span>© {new Date().getFullYear()} cmrd.info</span>
+          <span>Redesign concept · demo</span>
+        </div>
       </div>
     </footer>
   )

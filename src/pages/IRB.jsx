@@ -1,124 +1,104 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { site } from '../data/site'
 import { images } from '../data/images'
-import { EASE, Hero, Lines, Reveal, Btn, Solid, Meta, Kicker, RevealImg, Statement } from '../components/ui'
-import Particles from '../components/Particles'
-import { Closing } from '../components/cards'
+import { Reveal, Solid, Btn, SectionHead, Section, PageHeader, Steps } from '../components/ui'
+import { NextSteps } from '../components/cards'
 
-const steps = [
-  ['Register', 'Create a CMRD account and complete your researcher profile.', 'Profile complete'],
-  ['Submit protocol', 'Fill in the application form and upload the required documents.', 'Documents received'],
-  ['Ethical review', 'Independent reviewers evaluate your protocol for compliance.', 'Under review'],
-  ['Decision', 'Approval, revision request, or chairperson decision — with reasons.', 'Decision issued'],
-  ['Approval letter', 'Download your official, verifiable approval letter.', 'Approved · verifiable'],
+const features = [
+  ['Online protocol submission', 'Apply from anywhere — no paper forms.'],
+  ['Independent ethical review', 'Your protocol is assessed by independent reviewers.'],
+  ['Approval letter with verification', 'Each letter has a code anyone can check online.'],
+  ['Transparent application tracking', 'See exactly where your application is at any time.'],
 ]
-const docs = ['Completed application form', 'Full study protocol', 'Informed consent form (Bangla & English)', 'Data collection instrument / questionnaire', 'CV of principal investigator', 'Supervisor / department endorsement', 'Budget & timeline (if funded)']
+const steps = [
+  ['Register', 'Create a CMRD account and complete your researcher profile.'],
+  ['Submit protocol', 'Fill in the application form and upload the required documents.'],
+  ['Ethical review', 'Reviewers check your study for ethical compliance.'],
+  ['Decision', 'You receive an approval, a revision request, or a chairperson decision.'],
+  ['Approval letter', 'Download your official approval letter once approved.'],
+]
+const docs = ['Completed application form', 'Full study protocol', 'Informed consent form (Bangla & English)', 'Data collection sheet / questionnaire', 'CV of the principal investigator', 'Supervisor or department endorsement', 'Budget & timeline (if funded)']
 
 export default function IRB() {
-  const [step, setStep] = useState(0)
-  const [auto, setAuto] = useState(true)
   const [code, setCode] = useState('')
   const [res, setRes] = useState(null)
-  useEffect(() => { if (!auto) return; const t = setInterval(() => setStep((s) => (s + 1) % steps.length), 3000); return () => clearInterval(t) }, [auto])
   const verify = (e) => { e.preventDefault(); setRes(/^[A-Z0-9]{4}-[A-Z0-9]{4}$/i.test(code.trim())) }
 
   return (
     <>
-      <Hero kicker="06 — Institutional Review Board" image={images.notebook} lines={['Ethics,', 'made', '*visible.*']} desc="Submit your protocol for independent ethical assessment, track your application, respond to revisions and verify approvals — entirely online." meta={[['Full review', '2–4 weeks'], ['Expedited', '7–10 days'], ['Coordinator', site.irbEmail]]}>
-        <Btn to="/join?mode=register">Apply now</Btn>
-      </Hero>
+      <PageHeader crumb="IRB Portal" sub="CMRD Institutional Review Board" title="Ethical Review for Research Protocols" image={images.notebook}
+        desc="Any study involving people needs ethical approval. Submit your research application online, track review progress, respond to revisions, and verify approval letters.">
+        <Solid to="/join?mode=register">Apply now</Solid>
+        <Btn href="#verify">Verify an approval letter</Btn>
+      </PageHeader>
 
-      {/* process — interactive */}
-      <section className="relative bg-navy py-24 text-white sm:py-32" onMouseEnter={() => setAuto(false)} onMouseLeave={() => setAuto(true)}>
-        <Particles className="opacity-30" density={0.5} link={100} />
-        <div className="wrap relative">
-          <Reveal><Kicker n="02">How it works</Kicker></Reveal>
-          <div className="mt-14 grid gap-16 lg:grid-cols-12">
-            <div className="lg:col-span-7">
-              <div className="relative">
-                <div className="absolute left-[31px] top-0 bottom-0 w-px bg-white/10" />
-                <motion.div className="absolute left-[31px] top-0 w-px bg-accent" animate={{ height: `${(step / (steps.length - 1)) * 100}%` }} transition={{ duration: 0.8, ease: EASE }} />
-                {steps.map(([t, d], i) => (
-                  <button key={t} onMouseEnter={() => setStep(i)} onClick={() => setStep(i)} className="group relative flex w-full items-start gap-8 py-6 text-left">
-                    <span className={`display relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border text-xl transition-all duration-500 ${step >= i ? 'border-accent bg-navy text-accent' : 'border-white/20 bg-navy text-white/40'}`}>0{i + 1}</span>
-                    <div className="pt-3">
-                      <div className={`display text-2xl transition-colors duration-500 sm:text-3xl ${step === i ? 'text-white' : 'text-white/35 group-hover:text-white/70'}`}>{t}</div>
-                      <AnimatePresence initial={false}>{step === i && <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.5, ease: EASE }} className="max-w-md overflow-hidden text-lg text-gray"><span className="block pt-3">{d}</span></motion.p>}</AnimatePresence>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-            {/* live state panel */}
-            <div className="lg:col-span-4 lg:col-start-9">
-              <div className="sticky top-32 border border-white/15 p-8">
-                <Meta className="text-gray">Application</Meta>
-                <div className="meta mt-2 text-white">CMRD/IRB/2026/0142</div>
-                <div className="mt-8"><Meta className="text-gray">Status</Meta>
-                  <AnimatePresence mode="wait"><motion.div key={step} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4 }} className="display mt-2 text-2xl text-accent">{steps[step][2]}</motion.div></AnimatePresence>
-                </div>
-                <div className="mt-8 h-px w-full bg-white/10"><motion.div className="h-full bg-accent" animate={{ width: `${((step + 1) / steps.length) * 100}%` }} transition={{ duration: 0.8, ease: EASE }} /></div>
-                <div className="meta mt-3 flex justify-between text-gray"><span>Step {step + 1}</span><span>of {steps.length}</span></div>
-              </div>
-            </div>
-          </div>
+      <Section tone="alt">
+        <div className="grid gap-px bg-black/10 sm:grid-cols-2 lg:grid-cols-4">
+          {features.map(([t, d], i) => (
+            <Reveal key={t} delay={i * 0.05} className="h-full bg-white p-6"><span className="meta text-accent">0{i + 1}</span><h3 className="mt-4 text-lg font-medium">{t}</h3><p className="mt-2 text-sm text-gray-2">{d}</p></Reveal>
+          ))}
         </div>
-      </section>
+      </Section>
 
-      {/* documents — light */}
-      <section className="light py-24 sm:py-32">
-        <div className="wrap grid gap-12 lg:grid-cols-12">
+      <Section>
+        <SectionHead sub="How it works" title="From application to approval in five steps" desc="Typical turnaround: 2–4 weeks for full review; 7–10 days for expedited review of minimal-risk studies." />
+        <div className="mt-12"><Steps items={steps} /></div>
+      </Section>
+
+      <Section tone="alt" id="guidelines">
+        <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <Reveal><Kicker n="03">Before you apply</Kicker></Reveal>
-            <Lines as="h2" lines={['Required', '*documents.*']} className="display mt-8 text-[clamp(2rem,4.68vw,5.04rem)]" />
-            <Reveal delay={0.2}><p className="mt-8 max-w-md text-lg text-gray-2">Have these ready to avoid delays. Uploads are stored securely and visible only to the review board.</p>
-              <div className="mt-10 flex flex-wrap gap-8"><a href="#" className="ul meta">Guidelines & SOP</a><a href="#" className="ul meta">Application form</a><a href="#" className="ul meta">Consent template</a></div></Reveal>
+            <SectionHead sub="Submission guidelines" title="Documents you will need" desc="Have these ready before you apply to avoid delays. Uploads are visible only to the review board." />
+            <div className="mt-8 flex flex-wrap gap-6"><a href="#" className="ul meta">IRB guidelines & SOP</a><a href="#" className="ul meta">Application form</a><a href="#" className="ul meta">Consent form template</a></div>
+          </div>
+          <ol className="lg:col-span-6 lg:col-start-7">
+            {docs.map((d, i) => (
+              <li key={d} className="flex gap-5 border-b border-black/10 py-4 text-[16px] first:border-t"><span className="meta pt-1">{String(i + 1).padStart(2, '0')}</span>{d}</li>
+            ))}
+          </ol>
+        </div>
+      </Section>
+
+      <Section tone="dark" id="verify">
+        <div className="grid gap-12 lg:grid-cols-12 lg:items-start">
+          <div className="lg:col-span-5">
+            <SectionHead onDark sub="Verification" title="Verify an approval letter" desc="Journals, supervisors and institutions can check any CMRD IRB letter using the code printed on it. (Demo: any code like 7F3K-9QAZ returns a sample result.)" />
           </div>
           <div className="lg:col-span-6 lg:col-start-7">
-            {docs.map((d, i) => <Reveal key={d} delay={i * 0.04} amount={0.6} className="flex gap-8 hairline py-5 text-lg"><span className="meta pt-2 text-gray-2">{String(i + 1).padStart(2, '0')}</span>{d}</Reveal>)}
-            <div className="hairline" />
-          </div>
-        </div>
-      </section>
-
-      {/* verify — black */}
-      <section id="verify" className="relative bg-black py-24 text-white sm:py-32">
-        <div className="absolute inset-0 grid-bg" />
-        <div className="wrap relative grid items-center gap-16 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <Reveal><Kicker n="04">Verification</Kicker></Reveal>
-            <Lines as="h2" lines={['Verify', 'any', '*approval.*']} className="display mt-8 text-[clamp(2.2rem,5.76vw,6.48rem)]" />
-            <Reveal delay={0.2}><p className="mt-8 max-w-md text-lg text-gray">Journals, supervisors and institutions can verify a letter instantly using the code printed on it. For this demo, any code in the format XXXX-XXXX returns a sample result.</p></Reveal>
-          </div>
-          <div className="lg:col-span-5 lg:col-start-8">
-            <form onSubmit={verify} className="flex items-end gap-6 border-b border-white/40 pb-4">
-              <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="7F3K-9QAZ" className="meta-lg flex-1 bg-transparent text-3xl text-white outline-none placeholder:text-white/25" style={{ letterSpacing: '.1em' }} />
-              <button type="submit" className="ul meta">Verify</button>
+            <form onSubmit={verify} className="flex flex-col gap-3 sm:flex-row">
+              <label className="flex-1"><span className="sr-only">Verification code</span>
+                <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter code e.g. 7F3K-9QAZ" className="w-full border border-white/25 bg-transparent px-4 py-3.5 font-mono text-white outline-none placeholder:text-white/35 focus:border-accent" />
+              </label>
+              <Solid type="submit">Verify</Solid>
             </form>
             <AnimatePresence mode="wait">
               {res !== null && (
-                <motion.div key={String(res) + code} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-10">
+                <motion.div key={String(res) + code} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-6 border border-white/15 p-6">
                   {res ? (
-                    <div className="border border-accent/50 p-8">
-                      <Meta accent>Valid approval</Meta>
-                      <div className="headline mt-4 text-2xl">Hypertension awareness and treatment adherence among urban garment workers</div>
-                      <dl className="mt-6 grid grid-cols-2 gap-5 text-sm">
-                        {[['Reference', 'CMRD/IRB/2026/0142'], ['PI', 'Dr. A. Rahman'], ['Approved', '12 Mar 2026'], ['Valid until', '11 Mar 2027']].map(([k, v]) => <div key={k}><dt className="meta text-gray">{k}</dt><dd className="mt-1">{v}</dd></div>)}
+                    <>
+                      <p className="meta text-accent">Valid approval</p>
+                      <p className="mt-3 text-lg">Hypertension awareness and treatment adherence among urban garment workers</p>
+                      <dl className="mt-5 grid grid-cols-2 gap-4 text-sm">
+                        {[['Reference', 'CMRD/IRB/2026/0142'], ['Principal investigator', 'Dr. A. Rahman'], ['Approved on', '12 Mar 2026'], ['Valid until', '11 Mar 2027']].map(([k, v]) => <div key={k}><dt className="text-gray">{k}</dt><dd className="mt-1">{v}</dd></div>)}
                       </dl>
-                    </div>
-                  ) : <p className="headline text-2xl text-gray">No approval found for that code.</p>}
+                    </>
+                  ) : <p className="text-gray">No approval found for that code. Check the code and try again.</p>}
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
         </div>
-      </section>
+      </Section>
 
-      <Statement lines={['Independent.', 'Transparent.', '*Verifiable.*']} image={images.pipette} sub={`IRB coordinator · ${site.irbEmail}`} />
-      <Closing light lines={['Ready to', 'submit your', '*protocol?*']} primary={['Register & apply', '/join?mode=register']} />
+      <Section>
+        <Reveal className="flex flex-col items-start justify-between gap-6 border border-black/10 bg-white-2 p-8 md:flex-row md:items-center">
+          <div><h2 className="headline text-2xl">Need help with your submission?</h2><p className="mt-2 text-gray-2">Contact the IRB coordinator at <a href={`mailto:${site.irbEmail}`} className="ul text-black">{site.irbEmail}</a></p></div>
+          <Btn to="/contact">Contact page</Btn>
+        </Reveal>
+      </Section>
+
+      <NextSteps title="Before or after approval" items={['consultancy', 'courses', 'projects']} />
     </>
   )
 }
-
-export { Solid, RevealImg }
