@@ -71,7 +71,6 @@
   .ul-on:hover { background-size: 0% 1px; }
 
   .mask-x { mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent); }
-  .bengali { font-family: "Inter Tight", "Noto Sans Bengali", system-ui, sans-serif; }
   .scrollbar-none { scrollbar-width: none; } .scrollbar-none::-webkit-scrollbar { display: none; }
   .clip-t { clip-path: inset(0 0 0 0); }
 }

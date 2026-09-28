@@ -5,18 +5,15 @@ import { images } from '../data/images'
 import { Reveal, Btn, SectionHead, Section, PageHeader } from '../components/ui'
 import { PostCard, NextSteps } from '../components/cards'
 
-const langs = [['all', 'All languages'], ['en', 'English'], ['bn', 'বাংলা']]
-
 export default function Blog() {
   const [cat, setCat] = useState('All')
-  const [lang, setLang] = useState('all')
   const [q, setQ] = useState('')
-  const list = posts.filter((p) => (cat === 'All' || p.category === cat) && (lang === 'all' || p.lang === lang) && p.title.toLowerCase().includes(q.toLowerCase()))
+  const list = posts.filter((p) => (cat === 'All' || p.category === cat) && p.title.toLowerCase().includes(q.toLowerCase()))
 
   return (
     <>
       <PageHeader crumb="Blog" sub="Blog" title="Fresh writing from the CMRD team"
-        desc="New research notes, institutional updates, and practical insights in one place — short, free articles in Bangla and English." />
+        desc="New research notes, institutional updates, and practical insights in one place — short, free articles from the people who teach it." />
 
       <Section tone="alt">
         <div className="grid gap-10 border border-black/10 bg-white p-6 sm:p-8 lg:grid-cols-12 lg:items-center">
@@ -37,14 +34,11 @@ export default function Blog() {
             {categories.map((c) => <button key={c} onClick={() => setCat(c)} className={`-mb-px border-b-2 pb-3 ${cat === c ? 'border-accent text-black' : 'border-transparent'}`}>{c}</button>)}
           </div>
           <div className="mb-3 flex gap-3">
-            <select value={lang} onChange={(e) => setLang(e.target.value)} aria-label="Language" className="border border-black/15 px-3 py-2.5 text-sm outline-none focus:border-black">
-              {langs.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-            </select>
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search articles" aria-label="Search articles" className="w-full border border-black/15 px-4 py-2.5 text-sm outline-none focus:border-black sm:w-56" />
           </div>
         </div>
         <AnimatePresence mode="wait">
-          <motion.div key={cat + lang + q} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="mt-8">
+          <motion.div key={cat + q} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="mt-8">
             {list.length ? (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{list.map((p) => <PostCard key={p.id} p={p} />)}</div>
             ) : <p className="border border-dashed border-black/15 p-10 text-center text-gray-2">No articles match your search.</p>}

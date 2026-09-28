@@ -33,9 +33,9 @@ export function CourseCard({ c, detailed = false }) {
 export function PostCard({ p }) {
   return (
     <a href="#" className="group flex h-full flex-col border border-black/10 bg-white p-6 transition-colors hover:border-black/30">
-      <p className="meta">{p.category} · {p.lang === 'bn' ? 'বাংলা' : 'English'}</p>
-      <h3 className="bengali mt-4 text-lg font-medium leading-snug">{p.title}</h3>
-      <p className="bengali mt-2 flex-1 text-sm text-gray-2">{p.excerpt}</p>
+      <p className="meta">{p.category}</p>
+      <h3 className="mt-4 text-lg font-medium leading-snug">{p.title}</h3>
+      <p className="mt-2 flex-1 text-sm text-gray-2">{p.excerpt}</p>
       <div className="mt-6 flex items-center justify-between text-sm text-gray-2">
         <span>{fmtDate(p.date)} · {p.read} min</span>
         <span className="meta flex items-center gap-2 text-black">Read <Arrow className="transition-transform group-hover:translate-x-1" /></span>
